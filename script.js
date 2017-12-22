@@ -2,14 +2,27 @@ var joedude878me_irl = {
 	canvas: null,
 	ctx: null,
 	
+	level: {
+		image1: null,
+		ctx: null,
+		ctxUtils: null,
+		angle: 0.01,
+		init: function(){
+			this.image1 = joedude878me_irl.loader.map.get("dat_boi");
+			this.ctx = joedude878me_irl.ctx;
+			this.ctxUtils = joedude878me_irl.ctxUtils;
+		},
+		update: function(){
+			this.angle+=0.01;
+			this.ctxUtils.drawImageR(this.image1,0,0,200,200,Math.cos(this.angle),Math.sin(this.angle));
+		}
+	},
+	
 	loader: {
 		map: new Map(),
 		images: new Array(0),
 		loaded: 0,
 		loadImage: function(src1,name1){
-			if(name!=null){
-				this.map.set(name,this.images.length);
-			}
 			var image1 = new Image();
 			image1.src = src1;
 			image1.addEventListener(
@@ -19,6 +32,9 @@ var joedude878me_irl = {
 					},
 					false);
 			this.images.push(image1);
+			if(name1 != null){
+				this.map.set(name1,image1);
+			}
 		},
 		imageLoaded: function(){
 			this.loaded++;
@@ -54,9 +70,13 @@ var joedude878me_irl = {
 	},
 	
 	init: function(){
-		this.ctxUtils.drawImageT(this.loader.images[0],0,0);
-		this.ctxUtils.drawImageR(this.loader.images[0],0,0,100,100,Math.cos(0.5),Math.sin(0.5));
-		//this.ctx.drawImage(this.loader.images[this.loader.map.get("dat_boi")],0,0);
+		this.level.init();
+		this.loop();
+	},
+	
+	loop: function(){
+		joedude878me_irl.level.update();
+		window.requestAnimationFrame(joedude878me_irl.loop);
 	}
 }
 
