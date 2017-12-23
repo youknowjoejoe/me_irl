@@ -6,8 +6,28 @@ var joedude878me_irl = {
 		image1: null,
 		ctx: null,
 		ctxUtils: null,
-		tileSize: 32,
-		tileData: null,
+		tileData: {
+			tileSize: 64,
+			tile: [[0,0,0,0,1],[0,0,0,0,1],[0,0,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
+			update: function(){
+				
+			}
+			draw: function(ctx){
+				ctx.fillStyle = "rgb(0,0,0)";
+				for(var i = 0; i < this.tiles.length; i++){
+					for(var j = 0; j < this.tiles[0].length; j++){
+						if(this.tiles[i][j]){
+							this.ctx.fillRect(this.tileSize*j,this.tileSize*i,this.tileSize,this.tileSize);
+						}
+					}
+				}
+			}
+		}
+		
+		entities: null,
+		cEntities: null,
+		dEntities: null,
+		
 		angle: 0.01,
 		init: function(){
 			this.image1 = joedude878me_irl.loader.map.get("dat_boi");
@@ -20,7 +40,8 @@ var joedude878me_irl = {
 					this.tileData[i][j] = false;
 				}
 			}*/
-			this.tileData = [[][][][][]]
+
+			this.entities = new Array(0);
 			
 		},
 		step: function(){
@@ -31,14 +52,10 @@ var joedude878me_irl = {
 			this.angle+=0.01;
 		},
 		draw: function(){
+			this.ctx.fillStyle = "rgb(255,255,255)";
+			this.ctx.fillRect(0,0,canvas.width,canvas.height);
 			this.ctxUtils.drawImageR(this.image1,0,0,200,200,Math.cos(this.angle),Math.sin(this.angle));
-			for(int i = 0; i < 32; i++){
-				for(int j = 0; j < 32; k++){
-					if(this.tileData[i][j]){
-						this.ctx.fillRect(tileSize*i,tileSize*i,tileSize,tileSize);
-					}
-				}
-			}
+
 		}
 	},
 	
