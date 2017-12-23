@@ -7,26 +7,29 @@ var joedude878me_irl = {
 		ctx: null,
 		ctxUtils: null,
 		tileData: {
+			type: 0,
 			tileSize: 64,
-			tile: [[0,0,0,0,1],[0,0,0,0,1],[0,0,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
+			tiles: [[0,0,0,0,1],[0,0,0,0,1],[0,0,1,1,1],[1,1,1,1,1],[1,1,1,1,1]],
 			update: function(){
 				
-			}
+			},
 			draw: function(ctx){
 				ctx.fillStyle = "rgb(0,0,0)";
 				for(var i = 0; i < this.tiles.length; i++){
 					for(var j = 0; j < this.tiles[0].length; j++){
 						if(this.tiles[i][j]){
-							this.ctx.fillRect(this.tileSize*j,this.tileSize*i,this.tileSize,this.tileSize);
+							ctx.fillRect(this.tileSize*j,this.tileSize*i,this.tileSize,this.tileSize);
 						}
 					}
 				}
 			}
-		}
+		},
 		
 		entities: null,
-		cEntities: null,
-		dEntities: null,
+		c_entities: null,
+		d_entities: null,
+		
+		c_jmptbl: null,
 		
 		angle: 0.01,
 		init: function(){
@@ -40,22 +43,68 @@ var joedude878me_irl = {
 					this.tileData[i][j] = false;
 				}
 			}*/
-
-			this.entities = new Array(0);
 			
+			this.entities = new Array(0);
+			this.c_entities = new Array(0);
+			this.d_entities = new Array(0);
+			this.addEntityDCf(this.tileData);
+			
+			var tilesVaabb = function(a,b){
+				return false;
+			}
+			var aabbVtiles = function(a,b){
+				tilesVaabb(b,a);
+				return false;
+			}
+			var aabbVaabb = function(a,b){
+				return false;
+			}
+			this.c_jmptbl = [[null,tilesVaabb],[aabbVtiles,aabbVaabb]];
+		},
+		addEntity: function(e1){
+			this.entities.push(e1);
+		},
+		addEntityC: function(e1){
+			this.c_entities.push(e1);
+		},
+		addEntityCf: function(e1){
+			this.entities.push(e1);
+			this.c_entities.push(e1);
+		},
+		addEntityD: function(e1){
+			this.d_entities.push(e1);
+		},
+		addEntityDf: function(e1){
+			this.entities.push(e1);
+			this.d_entities.push(e1);
+		},
+		addEntityDCf: function(e1){
+			this.entities.push(e1);
+			this.d_entities.push(e1);
+			this.c_entities.push(e1);
 		},
 		step: function(){
 			this.update();
 			this.draw();
 		},
 		update: function(){
+			this.collisionDetect();
 			this.angle+=0.01;
+		},
+		collisionDetect: function(){
+			for(var i = 0; i < this.c_entities.length; i++){
+				for(var j = 0; j < i; j++){
+					this.c_jmptbl[this.c_entities[j].type][this.c_entities[i].type](this.c_entities[j],this.c_entities[i]);
+				}
+			}
 		},
 		draw: function(){
 			this.ctx.fillStyle = "rgb(255,255,255)";
 			this.ctx.fillRect(0,0,canvas.width,canvas.height);
 			this.ctxUtils.drawImageR(this.image1,0,0,200,200,Math.cos(this.angle),Math.sin(this.angle));
-
+			for(var i = 0; i < this.d_entities.length; i++){
+				this.d_entities[i].draw(this.ctx);
+			}
 		}
 	},
 	
