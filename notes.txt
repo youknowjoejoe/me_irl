@@ -1,0 +1,10 @@
+what do I want to make the me_irl game?
+
+platformer? hmm
+-could have "dat boi" lean left and right based off of velocity
+-fight bosses maybe?
+-tile based or not tile based?
+
+turn based jrpg?
+-jrpg's suck
+-they're easier to make

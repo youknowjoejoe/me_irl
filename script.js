@@ -6,15 +6,39 @@ var joedude878me_irl = {
 		image1: null,
 		ctx: null,
 		ctxUtils: null,
+		tileSize: 32,
+		tileData: null,
 		angle: 0.01,
 		init: function(){
 			this.image1 = joedude878me_irl.loader.map.get("dat_boi");
 			this.ctx = joedude878me_irl.ctx;
 			this.ctxUtils = joedude878me_irl.ctxUtils;
+			/*this.tileData = new Array(32);
+			for(var i = 0; i < 32; i++){
+				this.tileData[i] = new Array(32);
+				for(var j = 0; j < 32; j++){
+					this.tileData[i][j] = false;
+				}
+			}*/
+			this.tileData = [[][][][][]]
+			
+		},
+		step: function(){
+			this.update();
+			this.draw();
 		},
 		update: function(){
 			this.angle+=0.01;
+		},
+		draw: function(){
 			this.ctxUtils.drawImageR(this.image1,0,0,200,200,Math.cos(this.angle),Math.sin(this.angle));
+			for(int i = 0; i < 32; i++){
+				for(int j = 0; j < 32; k++){
+					if(this.tileData[i][j]){
+						this.ctx.fillRect(tileSize*i,tileSize*i,tileSize,tileSize);
+					}
+				}
+			}
 		}
 	},
 	
@@ -75,7 +99,7 @@ var joedude878me_irl = {
 	},
 	
 	loop: function(){
-		joedude878me_irl.level.update();
+		joedude878me_irl.level.step();
 		window.requestAnimationFrame(joedude878me_irl.loop);
 	}
 }
