@@ -141,6 +141,12 @@ var joedude878me_irl = {
 		
 		this.c_jmptbl = null;
 		
+		this.camera = {
+			getPos: function(){
+				return new joedude878me_irl.math.Vec2(0,0);
+			}
+		}
+		
 		this.init = function(){
 			this.entities = new Array(0);
 			this.c_entities = new Array(0);
@@ -238,6 +244,9 @@ var joedude878me_irl = {
 		this.draw = function(ctx,ctxUtils){
 			ctx.fillStyle = "rgb(255,255,255)";
 			ctx.fillRect(0,0,canvas.width,canvas.height);
+			ctx.save();
+			var cameraPos = this.camera.getPos();
+			ctx.translate(cameraPos.x-canvas.width/2.0,cameraPos.y-canvas.height/2.0);
 			for(var i = 0; i < this.d_entities.length; i++){
 				this.d_entities[i].draw(ctx,ctxUtils);
 			}
@@ -369,11 +378,15 @@ var joedude878me_irl = {
 			zeroVel: function(norm){
 				var tan = norm.perp1();
 				this.vel = tan.scaledBy(this.vel.dot(tan));
+			},
+			getPos: function(){
+				return this.aabb.pos.scaledBy(1);
 			}
 		}
 		dat_boi.init();
 		this.currentLevel.addEntityDCf(tileData1);
 		this.currentLevel.addEntityDCf(dat_boi);
+		this.currentLevel.camera = dat_boi;
 		this.loop();
 	},
 	
