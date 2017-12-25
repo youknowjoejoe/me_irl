@@ -143,7 +143,7 @@ var joedude878me_irl = {
 		
 		this.camera = {
 			getPos: function(){
-				return new joedude878me_irl.math.Vec2(0,0);
+				return new joedude878me_irl.math.Vec2(200,200);
 			}
 		}
 		
@@ -155,11 +155,11 @@ var joedude878me_irl = {
 			var aabbVaabb = function(a,b){
 				var ci = a.getAABB().collide(b.getAABB());
 				if(ci.collided){
-					ci.penetration*=0.4;
+					ci.penetration = Math.max(0.0,ci.penetration-0.01)*0.2;
 					a.translate(ci.normal.scaledBy(ci.penetration/2.0));
 					b.translate(ci.normal.scaledBy(-ci.penetration/2.0));
 					a.zeroVel(ci.normal);
-					b.zeroVel(ci.normal);
+					b.zeroVel(ci.normal.scaledBy(-1));
 				}
 			}
 			var tilesVaabb = function(a,b){
@@ -187,7 +187,7 @@ var joedude878me_irl = {
 				}
 				
 				if(ci.collided){
-					ci.penetration*=0.4;
+					ci.penetration = Math.max(0.0,ci.penetration-0.01)*0.2;
 					b.translate(ci.normal.scaledBy(ci.penetration));
 					b.zeroVel(ci.normal);
 				}
@@ -246,10 +246,11 @@ var joedude878me_irl = {
 			ctx.fillRect(0,0,canvas.width,canvas.height);
 			ctx.save();
 			var cameraPos = this.camera.getPos();
-			ctx.translate(cameraPos.x-canvas.width/2.0,cameraPos.y-canvas.height/2.0);
+			ctx.translate(-cameraPos.x+canvas.width/2.0,-cameraPos.y+canvas.height/2.0);
 			for(var i = 0; i < this.d_entities.length; i++){
 				this.d_entities[i].draw(ctx,ctxUtils);
 			}
+			ctx.restore();
 		}
 	},
 	
@@ -373,14 +374,14 @@ var joedude878me_irl = {
 			},
 			translate: function(v1){
 				this.aabb.pos = this.aabb.pos.plus(v1);
-				if(v1.y<0) this.onGround = true;
 			},
 			zeroVel: function(norm){
+				if(norm.y < 0) this.onGround = true;
 				var tan = norm.perp1();
 				this.vel = tan.scaledBy(this.vel.dot(tan));
 			},
 			getPos: function(){
-				return this.aabb.pos.scaledBy(1);
+				return this.aabb.pos;
 			}
 		}
 		dat_boi.init();
